@@ -13,9 +13,8 @@ use App\Models\Person;
 
 class BirthdayHelper {
 
-    private $person;
     private $birthdate;
-    private $birthdateThisYear;
+    private $nextBirthday;
     private $endDate = null;
 
     public function __construct($person)
@@ -24,11 +23,7 @@ class BirthdayHelper {
             ->tz('GMT'); //GMT is how we store the dates in the DB
         $this->birthdate->setTimezone($person->timezone);
 
-        $birthdateThisYear = Carbon::create(null, $this->birthdate->format('m'), $this->birthdate->format('d'), 0,0,0,$person->timezone);
-
-        $this->birthdateThisYear = $birthdateThisYear; //create birthday this year in user's timezone
-
-
+        $this->nextBirthday = $this->getNextBirthday();
     }
 
 
@@ -36,6 +31,23 @@ class BirthdayHelper {
     {
         return $this->birthdate;
     }
+
+    /**
+     * Returns the next birthday.
+     * Calculates the birthday this year, and then see if it has already occured. If so, give next year's date.
+     * @return Carbon
+     */
+    private function getNextBirthday() {
+        //create birthday this year in user's timezone
+        $nextBirthdayStart = Carbon::create(null, $this->birthdate->format('m'), $this->birthdate->format('d'), 0,0,0,$this->birthdate->tz());
+        $nextBirthdayEnd = Carbon::create(null, $this->birthdate->format('m'), $this->birthdate->format('d'), 23,59,59,$this->birthdate->tz());
+
+        if ($nextBirthdayEnd->isPast()) { //if birthday has already passed, use next year
+            $nextBirthdayStart->addYear();
+        }
+        return $nextBirthdayStart;
+    }
+
 
     /**
      * Returns Carbon object of end date. Sets to now() if date is null
@@ -70,7 +82,7 @@ class BirthdayHelper {
      */
     public function isBirthdayToday()
     {
-         return ($this->getEndDate()->format('Y-m-d') == $this->birthdateThisYear->format('Y-m-d'));
+         return ($this->getEndDate()->format('Y-m-d') == $this->nextBirthday->format('Y-m-d'));
     }
 
 
@@ -81,10 +93,17 @@ class BirthdayHelper {
      * @return \Carbon\CarbonInterval
      */
     public function getInterval(Carbon $startDate = null, Carbon $endDate = null) {
-        $startDate = !$startDate ? $this->birthdateThisYear : $startDate;
+        $startDate = !$startDate ? $this->nextBirthday : $startDate;
         $endDate = !$endDate ? $this->getEndDate() : $endDate;
 
         return  $startDate->diffAsCarbonInterval($endDate);
+    }
+
+    public function getIntervalUntilTomorrow() {
+        $now = Carbon::now($this->birthdate->tz());
+        $tomorrow = Carbon::create(null, null, null, 0, 0, 0, $this->birthdate->tz());
+        $tomorrow->addDay();
+        return $this->getInterval($now, $tomorrow);
     }
 
     /**
@@ -93,19 +112,22 @@ class BirthdayHelper {
      */
     public function getIntervalMessage($name) {
         $message = $name;
-        $message .= ' is '. $this->birthdate->diffInYears($this->birthdateThisYear). ' years old ';
+        $message .= ' is '. $this->birthdate->diffInYears($this->nextBirthday). ' years old ';
 
-        $interval = $this->getInterval($this->getEndDate(), $this->birthdateThisYear);
 
         if ($this->isBirthdayToday()) {
+
+            $interval = $this->getIntervalUntilTomorrow();
+
             $message .= 'today.';
             $message .= ' Birthday ends in ';
             if ($interval->h > 0) {
                 $message .= $interval->h. ' hours ';
             } else {
-                $message .= $interval->m. ' minutes ';
+                $message .= $interval->i. ' minutes ';
             }
         } else {
+            $interval = $this->getInterval($this->getEndDate(), $this->nextBirthday);
 
             $message .= 'in ' .$interval->m. ' months, '. $interval->d. ' days ';
 

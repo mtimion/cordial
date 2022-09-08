@@ -23,7 +23,7 @@ class PeopleController extends Controller
 
                 $person['birthdate'] = $helper->getBirthdate()->format('Y-m-d'); //Converts back to person's time zone for ease of use.
                 $person['isBirthday'] = $helper->isBirthdayToday();
-                $person['interval'] = $helper->getInterval();
+                $person['interval'] = $helper->isBirthdayToday()? $helper->getIntervalUntilTomorrow() : $helper->getInterval();
                 $person['message'] = $helper->getIntervalMessage($person['name']);
 
 
