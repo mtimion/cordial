@@ -9,7 +9,7 @@ use Database\Factories\PersonFactory;
 class IsBirthdayTodayTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Make sure that a birthdate today is recognized as today.
      *
      * @return void
      */
@@ -17,8 +17,8 @@ class IsBirthdayTodayTest extends TestCase
     {
         $fakePersonFactory = new PersonFactory();
 
-        $birthday = Carbon::createFromDate(1975, null, null)->tz('America/New_York'); //today's date in 1975
-        $fakePerson = $fakePersonFactory->create(['birthdate'=>$birthday->tz('UTC')->format('Y-m-d H:i:s'), 'timezone'=>$birthday->tz()]);
+        $birthday = Carbon::create(1975, null, null, 0, 0, 0, 'America/New_York'); //today's date in 1975
+        $fakePerson = $fakePersonFactory->create(['birthdate'=>$birthday->tz('UTC')->format('Y-m-d H:i:s'), 'timezone'=>'America/New_York']);
 
         $birthdayHelper = new BirthdayHelper($fakePerson);
         $this->assertTrue($birthdayHelper->isBirthdayToday());

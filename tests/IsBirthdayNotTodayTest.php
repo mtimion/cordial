@@ -9,7 +9,7 @@ use Database\Factories\PersonFactory;
 class IsBirthdayNotTodayTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Ensure that two dates do not register as the same date
      *
      * @return void
      */
@@ -18,11 +18,11 @@ class IsBirthdayNotTodayTest extends TestCase
     {
         $fakePersonFactory = new PersonFactory();
 
-        $birthday = Carbon::createFromDate(1975, 1, 5)->tz('America/New_York'); //today's date in 1975
+        $birthday = Carbon::create(1975, 1, 5, 0, 0, 0, 'America/New_York'); //today's date in 1975
 
-        $fakePerson = $fakePersonFactory->create(['birthdate'=>$birthday->format('Y-m-d'), 'timezone'=>$birthday->tz()]);
+        $fakePerson = $fakePersonFactory->create(['birthdate'=>$birthday->format('Y-m-d H:i:s'), 'timezone'=>'America/New_York']);
 
-        $today = Carbon::createFromDate(null, 1, 10)->tz('America/New_York'); //this year, january 10th
+        $today = Carbon::create(null, 1, 10, 0, 0, 0, 'America/New_York'); //this year, january 10th
         $birthdayHelper = new BirthdayHelper($fakePerson);
         $birthdayHelper->setEndDate($today);
 

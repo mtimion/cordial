@@ -7,7 +7,7 @@ namespace Tests;
 class createPersonTest extends TestCase
 {
     /**
-     * A basic test example.
+     * A basic test example. We create user via API and make sure it returns the correct response.
      *
      * @return void
      */

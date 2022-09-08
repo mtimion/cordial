@@ -8,7 +8,7 @@ use Laravel\Lumen\Testing\DatabaseTransactions;
 class GetTest extends TestCase
 {
     /**
-     * A basic test example.
+     * A basic test example. Ensure web service is responding
      *
      * @return void
      */

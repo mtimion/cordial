@@ -21,8 +21,8 @@ class BirthdayHelper {
     public function __construct($person)
     {
         $this->birthdate = Carbon::parse($person->birthdate)
-            ->tz('GMT') //GMT is how we store the dates in the DB
-            ->setTimezone($person->timezone);
+            ->tz('GMT'); //GMT is how we store the dates in the DB
+        $this->birthdate->setTimezone($person->timezone);
 
         $birthdateThisYear = Carbon::create(null, $this->birthdate->format('m'), $this->birthdate->format('d'), 0,0,0,$person->timezone);
 
@@ -53,7 +53,14 @@ class BirthdayHelper {
      * @param Carbon $date
      */
     public function setEndDate(Carbon $date) {
+
         $this->endDate = $date;
+        /**
+         * This is needed in case the end date has a different time zone than the birth date.
+         * This will normalize the two so they can be more easily compared.
+         */
+        $this->endDate->setTimezone($this->birthdate->tz());
+
     }
 
 

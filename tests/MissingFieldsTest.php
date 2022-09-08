@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class MissingFieldsTest extends TestCase
 {
     /**
-     * A basic test example.
+     * Validate that a request with a missing name returns an error
      *
      * @return void
      */
@@ -21,6 +21,9 @@ class MissingFieldsTest extends TestCase
 
     }
 
+    /**
+     * Ensure that a request without a birthdate returns an error
+     */
     public function test_missing_date()
     {
 
@@ -31,6 +34,9 @@ class MissingFieldsTest extends TestCase
 
     }
 
+    /**
+     * Ensure a request withtout a timezone returns an error
+     */
     public function test_missing_timezone()
     {
 

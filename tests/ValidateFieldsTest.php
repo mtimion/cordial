@@ -8,9 +8,7 @@ use Carbon\Carbon;
 class ValidateFieldsTest extends TestCase
 {
     /**
-     * A basic test example.
-     *
-     * @return void
+     * Ensure an invalid Birthdate throws an error
      */
 
     public function test_invalid_date()
@@ -23,6 +21,9 @@ class ValidateFieldsTest extends TestCase
 
     }
 
+    /**
+     * Ensure an invalid timezone throws an error.
+     */
     public function test_invalid_timezone()
     {
 
