@@ -17,17 +17,17 @@ This application requires a working knowledge of composer, github, PHP8+, and Mo
 4. Copy the `.env.sample` file and rename it to `.env`
 5. Edit the new `.env` file to have your MongoDB connection settings.
 - the DB_URI should look like this: `mongodb://127.0.0.1:27017`
-
 - the DB_DATABASE field should be a database you have already created on the MongoDB server.
-6. In a terminal window, run `php -S localhost:8000 -t public`. This will host the application.
+6. In the terminal window, run `php artisan migrate` to create database tables.
+7. In a terminal window, run `php -S localhost:8000 -t public`. This will host the application.
 
 ## How to use
 
 ### Creating a person
-In order to create a person in the application, send a POST to `http://localhost:8000/person`.
+In order to create a person in the application, send a POST request to `http://localhost:8000/person`.
 The JSON request must contain three elements: name, birthdate, timezone. An example payload looks like this:
-`{'name': 'Firstname Lastname', 'birthdate': '1776-07-04 12:34:56', 'timezone': 'America/New_York'}`
+`{'name': 'Firstname Lastname', 'birthdate': '1776-07-04', 'timezone': 'America/New_York'}`
 
 ### Getting all records from application
-In order to retrieve all people in the application, submit a GET request to `http://localhost:8000/person`. This will return all people in the database along with their associated birtday information.
+In order to retrieve all people in the application, submit a GET request to `http://localhost:8000/person`. This will return all people in the database along with their associated birthday information.
 
