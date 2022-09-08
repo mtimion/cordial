@@ -82,7 +82,7 @@ class BirthdayHelper {
      */
     public function isBirthdayToday()
     {
-         return ($this->getEndDate()->format('Y-m-d') == $this->nextBirthday->format('Y-m-d'));
+        return ($this->getEndDate()->format('Y-m-d') == $this->nextBirthday->format('Y-m-d'));
     }
 
 
